@@ -1,4 +1,4 @@
-const { TraceLogger }      = require('./libs/traceLogger');
+const { TraceLogger }      = require('./traceLogger');
 const { ErrorTraceLogger } = require('./errorTraceLogger');
 
 module.exports = {
