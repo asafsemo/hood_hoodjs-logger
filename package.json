@@ -24,7 +24,7 @@
     "url": "git+https://github.com/asafsemo/hood_hoodjs-logger.git"
   },
   "author": "Asaf Semo",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/asafsemo/hood_hoodjs-logger/issues"
   },

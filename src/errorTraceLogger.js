@@ -12,4 +12,4 @@ class ErrorTraceLogger extends Error {
 
 }
 
-exports.default = ErrorTraceLogger;
+module.exports = { ErrorTraceLogger };
