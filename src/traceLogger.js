@@ -18,6 +18,8 @@ const levels = {
 	60     : 'fatal',
 };
 
+const RESERVED_INT64 = 9223372036854775807;
+
 // disconnect the logger
 /** Class representing a TraceLogger. */
 class TraceLogger {
@@ -56,8 +58,8 @@ class TraceLogger {
 
 		if (trace) {
 			this._trace = {
-				id     : trace.id || bignum.rand(18446744073709551615).toNumber(),
-				current: trace.current || bignum.rand(18446744073709551615).toNumber(),
+				id     : trace.id || bignum.rand(RESERVED_INT64).toNumber(),
+				current: trace.current || bignum.rand(RESERVED_INT64).toNumber(),
 			};
 			// this._trace.tags    = trace.tags;
 		}
