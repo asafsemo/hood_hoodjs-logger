@@ -55,8 +55,10 @@ class TraceLogger {
 		this._errStream = restOptions.errStream || console.error;
 
 		if (trace) {
-			this._trace.id      = trace.id || bignum.rand(18446744073709551615).toNumber();
-			this._trace.current = trace.current || bignum.rand(18446744073709551615).toNumber();
+			this._trace = {
+				id     : trace.id || bignum.rand(18446744073709551615).toNumber(),
+				current: trace.current || bignum.rand(18446744073709551615).toNumber(),
+			};
 			// this._trace.tags    = trace.tags;
 		}
 	}
@@ -132,7 +134,7 @@ class TraceLogger {
 	 * let internalLogger = logger.createChildTraceLogger('getUserByEmailAndPassword');
 	 * internalLogger.info('start');
 	 * let user = await userRepository.findUserByEmail(email);
-	 * internalLogger.info('end', { status: 'end' });
+	 * internalLogger.info('end', { status: 'complete' });
 	 * ```
 	 *
 	 * @param {string} name - Mandatory child logger name.
@@ -213,6 +215,8 @@ class TraceLogger {
 	 * @param {object} [options={}] - Optional log params.
 	 * @param {object} [options.trace=null] - trace data(current and parent). Use this option to override trace from logger.
 	 * @param {object} [options.tags=null] - tags options.
+	 * @param {string} [options.status] - Sets status of the logger, e.g. logger.info('end', { status: 'complete' });.
+	 *                                    Currently used to terminate logging of the tracer.
 	 * @return {undefined}.
 	 */
 	info(msg, options) {
