@@ -1,11 +1,11 @@
 const test = require('tape');
 
-const { TraceLogger, ErrorTraceLogger } = require('../src/index');
+const { HoodLogger, ErrorHoodLogger } = require('../src/index');
 
 test.onFinish(() => { process.exit(0); });
 
 function setup () {
-  const logger = new TraceLogger('general_logger_test', {
+  const logger = new HoodLogger('general_logger_test', {
     logStream: jsonObj => {console.log(jsonObj);},
     errStream: jsonObj => {console.log(jsonObj);},
   });
@@ -19,7 +19,7 @@ test('Test root logger without name, should throw an exception.', { skip: false 
 
     logger.createRootTraceLogger('', {});
   } catch (err) {
-    assert.ok(err instanceof ErrorTraceLogger, `Thrown error should be instance of: ${ErrorTraceLogger.name}`);
+    assert.ok(err instanceof ErrorHoodLogger, `Thrown error should be instance of: ${ErrorHoodLogger.name}`);
     assert.equal(err.message, 'Missing mandatory parameter: name', 'Error message should be: Missing mandatory parameter: name');
   } finally {
     assert.end();

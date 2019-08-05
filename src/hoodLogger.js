@@ -1,7 +1,7 @@
 const bignum = require('bignum');
 const os     = require('os');
 
-const { ErrorTraceLogger } = require('./errorTraceLogger');
+const { ErrorHoodLogger} = require('./errorHoodLogger');
 
 const levels = {
 	verbose: 10,
@@ -21,11 +21,11 @@ const levels = {
 const RESERVED_INT64 = 9223372036854775807;
 
 // disconnect the logger
-/** Class representing a TraceLogger. */
-class TraceLogger {
+/** Class representing a HoodLogger. */
+class HoodLogger {
 
   /**
-   * Creates an instance of TraceLogger.
+   * Creates an instance of HoodLogger.
    *
    * @constructor
    * @param {string} name - Mandatory general logger name.
@@ -39,7 +39,7 @@ class TraceLogger {
    */
   constructor (name, options) {
     if (!name) {
-      throw new ErrorTraceLogger('Missing mandatory parameter: name');
+      throw new ErrorHoodLogger('Missing mandatory parameter: name');
     }
     const { minLevel, trace, ...restOptions } = options || {};
 
@@ -117,14 +117,14 @@ class TraceLogger {
 	 * @param {number} [options.trace.id] - Root trace id.
 	 * @param {number} [options.trace.current] - Current trace id.
 	 * TODO: add tags
-	 * @return {TraceLogger} new instance of Root trace logger.
+	 * @return {HoodLogger} new instance of Root trace logger.
 	 */
 	createRootTraceLogger(name, options) {
 		let { minLevel, ...restOptions } = options || {};
 		restOptions.minLevel             = levels[minLevel] ? minLevel : this._minLevel;
 		let newOptions                    = Object.assign({}, this._options, restOptions);
 		newOptions.trace                  = newOptions.trace || {};
-		return new TraceLogger(name, newOptions);
+		return new HoodLogger(name, newOptions);
 	}
 
 	/**
@@ -133,7 +133,7 @@ class TraceLogger {
 	 * When you need to monitor some function behaviour you can create child tracer and wrap the function with it. e.g.:
 	 *
 	 * ```js
-	 * let internalLogger = logger.createChildTraceLogger('getUserByEmailAndPassword');
+	 * let internalLogger = logger.createChildTraceLogger('findUserByEmail');
 	 * internalLogger.info('start');
 	 * let user = await userRepository.findUserByEmail(email);
 	 * internalLogger.info('end', { status: 'complete' });
@@ -146,11 +146,11 @@ class TraceLogger {
 	 * @param {number} [options.trace.id] - Root trace id.
 	 * @param {number} [options.trace.current] - Current trace id.
 	 * TODO: add tags
-	 * @return {TraceLogger} new instance of Child trace logger.
+	 * @return {HoodLogger} new instance of Child trace logger.
 	 */
 	createChildTraceLogger (name, options) {
 		if (!this._trace) {
-			throw new ErrorTraceLogger('Can\'t create child trace logger from global logger.');
+			throw new ErrorHoodLogger('Can\'t create child trace logger from global logger.');
 		}
 		let { minLevel, trace, ...restOptions } = options || {};
 		restOptions.minLevel                    = levels[minLevel] ? minLevel : this._minLevel;
@@ -158,7 +158,7 @@ class TraceLogger {
 		restTrace.parent                         = current;
 		restOptions.trace                        = Object.assign({}, restTrace, trace);
 		let newOptions                           = Object.assign({}, this._options, restOptions);
-		return new TraceLogger(name, newOptions);
+		return new HoodLogger(name, newOptions);
 	}
 
 	/**
@@ -307,4 +307,4 @@ const buildTraceObject = (logger, trace, tags) => {
 	return t;
 };
 
-module.exports = { TraceLogger };
+module.exports = { HoodLogger };
