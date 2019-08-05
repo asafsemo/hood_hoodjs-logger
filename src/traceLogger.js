@@ -30,8 +30,8 @@ class TraceLogger {
    * @constructor
    * @param {string} name - Mandatory general logger name.
    * @param {object} [options={}] - The string containing two comma-separated numbers.
-   * @param {string} [options.min_level=info] - Minimum logging level, e.g. debug, info etc..
-   * @param {boolean} [options.disable_trace_logging=false] - Boolean flag, set it to true if you want to see logs in the files.
+   * @param {string} [options.minLevel=info] - Minimum logging level, e.g. debug, info etc..
+   * @param {boolean} [options.disableTraceLogging=false] - Boolean flag, set it to true if you want to see logs in the files.
    * @param {object} [options.trace] - Object which help tracing between several servers, connecting parent and current traces.
    * @param {number} [options.trace.id] - Root trace id.
    * @param {number} [options.trace.current] - Current trace id.
@@ -41,12 +41,12 @@ class TraceLogger {
     if (!name) {
       throw new ErrorTraceLogger('Missing mandatory parameter: name');
     }
-    const { min_level, trace, ...restOptions } = options || {};
+    const { minLevel, trace, ...restOptions } = options || {};
 
-    this._name        = name;
-    this._min_level   = min_level || 'info';
-    this._options     = restOptions;
-		this._default_log = {
+    this._name       = name;
+    this._minLevel   = minLevel || 'info';
+    this._options    = restOptions;
+		this._defaultLog = {
 			name    : this._name,
 			pid     : process.pid,
 			hostname: os.hostname(),
@@ -112,7 +112,7 @@ class TraceLogger {
    *
    * @param {string} name - Mandatory root logger name.
 	 * @param {object} [options={}] - Optional params.
-	 * @param {string} [options.min_level] - Minimum log level.
+	 * @param {string} [options.minLevel] - Minimum log level.
 	 * @param {object} [options.trace] - Object with parent and current traces. Using this param you can override traces from General logger.
 	 * @param {number} [options.trace.id] - Root trace id.
 	 * @param {number} [options.trace.current] - Current trace id.
@@ -120,8 +120,8 @@ class TraceLogger {
 	 * @return {TraceLogger} new instance of Root trace logger.
 	 */
 	createRootTraceLogger(name, options) {
-		let { min_level, ...restOptions } = options || {};
-		restOptions.min_level             = levels[min_level] ? min_level : this._min_level;
+		let { minLevel, ...restOptions } = options || {};
+		restOptions.minLevel             = levels[minLevel] ? minLevel : this._minLevel;
 		let newOptions                    = Object.assign({}, this._options, restOptions);
 		newOptions.trace                  = newOptions.trace || {};
 		return new TraceLogger(name, newOptions);
@@ -141,7 +141,7 @@ class TraceLogger {
 	 *
 	 * @param {string} name - Mandatory child logger name.
 	 * @param {object} [options={}] - Optional params.
-	 * @param {string} [options.min_level] - Minimum log level.
+	 * @param {string} [options.minLevel] - Minimum log level.
 	 * @param {object} [options.trace] - Object with parent and current traces. Using this param you can override traces from General logger.
 	 * @param {number} [options.trace.id] - Root trace id.
 	 * @param {number} [options.trace.current] - Current trace id.
@@ -152,8 +152,8 @@ class TraceLogger {
 		if (!this._trace) {
 			throw new ErrorTraceLogger('Can\'t create child trace logger from global logger.');
 		}
-		let { min_level, trace, ...restOptions } = options || {};
-		restOptions.min_level                    = levels[min_level] ? min_level : this._min_level;
+		let { minLevel, trace, ...restOptions } = options || {};
+		restOptions.minLevel                    = levels[minLevel] ? minLevel : this._minLevel;
 		let { current, ...restTrace }            = this._trace;
 		restTrace.parent                         = current;
 		restOptions.trace                        = Object.assign({}, restTrace, trace);
@@ -194,7 +194,7 @@ class TraceLogger {
 	 * @return {undefined}.
 	 */
 	verbose(msg, options) {
-		write_log(this, msg, options, levels.verbose, this._logStream);
+		writeLog(this, msg, options, levels.verbose, this._logStream);
 	}
 
 	/**
@@ -207,7 +207,7 @@ class TraceLogger {
 	 * @return {undefined}.
 	 */
 	debug(msg, options) {
-		write_log(this, msg, options, levels.debug, this._logStream);
+		writeLog(this, msg, options, levels.debug, this._logStream);
 	}
 
 	/**
@@ -222,7 +222,7 @@ class TraceLogger {
 	 * @return {undefined}.
 	 */
 	info(msg, options) {
-		write_log(this, msg, options, levels.info, this._logStream);
+		writeLog(this, msg, options, levels.info, this._logStream);
 	}
 
 	/**
@@ -235,7 +235,7 @@ class TraceLogger {
 	 * @return {undefined}.
 	 */
 	warn(msg, options) {
-		write_log(this, msg, options, levels.warn, this._logStream);
+		writeLog(this, msg, options, levels.warn, this._logStream);
 	}
 
 	/**
@@ -248,7 +248,7 @@ class TraceLogger {
 	 * @return {undefined}.
 	 */
 	error(msg, options) {
-		write_log(this, msg, options, levels.error, this._errStream);
+		writeLog(this, msg, options, levels.error, this._errStream);
 	}
 
 	/**
@@ -261,12 +261,12 @@ class TraceLogger {
 	 * @return {undefined}.
 	 */
 	fatal(msg, options) {
-		write_log(this, msg, options, levels.fatal, this._errStream);
+		writeLog(this, msg, options, levels.fatal, this._errStream);
 	}
 }
 
-const write_log = (logger, msg, options, level, stream) => {
-	if (level < levels[logger._min_level]) {
+const writeLog = (logger, msg, options, level, stream) => {
+	if (level < levels[logger._minLevel]) {
 		return;
 	}
 
@@ -275,25 +275,25 @@ const write_log = (logger, msg, options, level, stream) => {
 	let log = {
 		time: new Date(), level: level, msg: msg,
 	};
-	log     = Object.assign({}, logger._default_log, log, restOptions);
+	log     = Object.assign({}, logger._defaultLog, log, restOptions);
 
-	let trace_object = build_trace_object(logger, trace, tags);
-	if (trace_object) {
-		log.trace = trace_object;
+	let traceObject = buildTraceObject(logger, trace, tags);
+	if (traceObject) {
+		log.trace = traceObject;
 	}
 
 	stream(JSON.stringify(log));
 };
 
-const build_trace_object = (logger, trace, tags) => {
-	if (logger._options && logger._options.disable_trace_logging) {
+const buildTraceObject = (logger, trace, tags) => {
+	if (logger._options && logger._options.disableTraceLogging) {
 		return null;
 	}
 
 	let t      = Object.assign({}, logger._trace, trace);
-	let t_tags = tags || t.tags;
+	let tTags = tags || t.tags;
 
-	if (!Object.keys(t).length && !t_tags) {
+	if (!Object.keys(t).length && !tTags) {
 		return null;
 	}
 
@@ -301,8 +301,8 @@ const build_trace_object = (logger, trace, tags) => {
 		return null;
 	}
 
-	if (t_tags) {
-		t.tags = t_tags;
+	if (tTags) {
+		t.tags = tTags;
 	}
 	return t;
 };
