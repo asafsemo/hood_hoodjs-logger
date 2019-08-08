@@ -1,7 +1,7 @@
-const { TraceLogger }      = require('./traceLogger');
-const { ErrorTraceLogger } = require('./errorTraceLogger');
+const { HoodLogger }      = require('./hoodLogger');
+const { ErrorHoodLogger } = require('./errorHoodLogger');
 
 module.exports = {
-	TraceLogger,
-	ErrorTraceLogger,
+	HoodLogger,
+	ErrorHoodLogger,
 };

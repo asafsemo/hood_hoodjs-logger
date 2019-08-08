@@ -1,8 +1,8 @@
-class ErrorTraceLogger extends Error {
+class ErrorHoodLogger extends Error {
 
 	constructor(message, errorCode = 0) {
 		super(message);
-		this.name       = 'ErrorTraceLogger';
+		this.name       = 'HoodLogger';
 		this._errorCode = errorCode;
 	}
 
@@ -12,4 +12,4 @@ class ErrorTraceLogger extends Error {
 
 }
 
-module.exports = { ErrorTraceLogger };
+module.exports = { ErrorHoodLogger };
