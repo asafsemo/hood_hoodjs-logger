@@ -1,7 +1,7 @@
 const bignum = require('bignum');
 const os     = require('os');
 
-const { ErrorHoodLogger} = require('./errorHoodLogger');
+const { ErrorHoodLogger } = require('./errorHoodLogger');
 
 const levels = {
 	verbose: 10,
@@ -24,33 +24,31 @@ const RESERVED_INT64 = 9223372036854775807;
 /** Class representing a HoodLogger. */
 class HoodLogger {
 
-  /**
-   * Creates an instance of HoodLogger.
-   *
-   * @constructor
-   * @param {string} name - Mandatory general logger name.
-   * @param {object} [options={}] - The string containing two comma-separated numbers.
-   * @param {string} [options.minLevel=info] - Minimum logging level, e.g. debug, info etc..
-   * @param {boolean} [options.disableTraceLogging=false] - Boolean flag, set it to true if you want to see logs in the files.
-   * @param {object} [options.trace] - Object which help tracing between several servers, connecting parent and current traces.
-   * @param {number} [options.trace.id] - Root trace id.
-   * @param {number} [options.trace.current] - Current trace id.
-   * TODO: add tags - last
-   */
-  constructor (name, options) {
-    if (!name) {
-      throw new ErrorHoodLogger('Missing mandatory parameter: name');
-    }
-    const { minLevel, trace, ...restOptions } = options || {};
+	/**
+	 * Creates an instance of HoodLogger.
+	 *
+	 * @constructor
+	 * @param {string} name - Mandatory general logger name.
+	 * @param {object} [options={}] - The string containing two comma-separated numbers.
+	 * @param {string} [options.minLevel=info] - Minimum logging level, e.g. debug, info etc..
+	 * @param {string} [options.version="0"] - set the default version of the service
+	 * @param {boolean} [options.disableTraceLogging=false] - Boolean flag, set it to true if you want to see logs in the files.
+	 * @param {object} [options.trace] - Object which help tracing between several servers, connecting parent and current traces.
+	 * @param {number} [options.trace.id] - Root trace id.
+	 * @param {number} [options.trace.current] - Current trace id.
+	 * TODO: add tags - last
+	 */
+	constructor(name, options) {
+		if (!name) {
+			throw new ErrorHoodLogger('Missing mandatory parameter: name');
+		}
+		const { minLevel, trace, ...restOptions } = options || {};
 
-    this._name       = name;
-    this._minLevel   = minLevel || 'info';
-    this._options    = restOptions;
+		this._name       = name;
+		this._minLevel   = minLevel || 'info';
+		this._options    = restOptions;
 		this._defaultLog = {
-			name    : this._name,
-			pid     : process.pid,
-			hostname: os.hostname(),
-			v       : 0,
+			name: this._name, pid: process.pid, hostname: os.hostname(), v: (restOptions.version || 0).toString(),
 		};
 
 		this._logStream = restOptions.logStream || console.log;
@@ -67,8 +65,8 @@ class HoodLogger {
 
 	/**
 	 * Set up listener on UncaughtException.
-   *
-   * @param {boolean} [isExitUncaughtException] Optical param, if to exit after UncaughtException was thrown.
+	 *
+	 * @param {boolean} [isExitUncaughtException] Optical param, if to exit after UncaughtException was thrown.
 	 * @return {undefined}
 	 */
 	// todo: test if this is working correct
@@ -85,11 +83,11 @@ class HoodLogger {
 		});
 	}
 
-  /**
-   * Use this function
-   *
-   * @return {number|null} Retrieves root trace id
-   */
+	/**
+	 * Use this function
+	 *
+	 * @return {number|null} Retrieves root trace id
+	 */
 	get rootTraceId() {
 		if (!this._trace) {
 			return null;
@@ -97,9 +95,9 @@ class HoodLogger {
 		return this._trace.id;
 	}
 
-  /**
-   * @return {number|null} Retrieves current trace id
-   */
+	/**
+	 * @return {number|null} Retrieves current trace id
+	 */
 	get currentTraceId() {
 		if (!this._trace) {
 			return null;
@@ -109,8 +107,8 @@ class HoodLogger {
 
 	/**
 	 * Creates a Root logger instance. This is a helper function which can generate traces.
-   *
-   * @param {string} name - Mandatory root logger name.
+	 *
+	 * @param {string} name - Mandatory root logger name.
 	 * @param {object} [options={}] - Optional params.
 	 * @param {string} [options.minLevel] - Minimum log level.
 	 * @param {object} [options.trace] - Object with parent and current traces. Using this param you can override traces from General logger.
@@ -122,8 +120,8 @@ class HoodLogger {
 	createRootTraceLogger(name, options) {
 		let { minLevel, ...restOptions } = options || {};
 		restOptions.minLevel             = levels[minLevel] ? minLevel : this._minLevel;
-		let newOptions                    = Object.assign({}, this._options, restOptions);
-		newOptions.trace                  = newOptions.trace || {};
+		let newOptions                   = Object.assign({}, this._options, restOptions);
+		newOptions.trace                 = newOptions.trace || {};
 		return new HoodLogger(name, newOptions);
 	}
 
@@ -148,16 +146,16 @@ class HoodLogger {
 	 * TODO: add tags
 	 * @return {HoodLogger} new instance of Child trace logger.
 	 */
-	createChildTraceLogger (name, options) {
+	createChildTraceLogger(name, options) {
 		if (!this._trace) {
 			throw new ErrorHoodLogger('Can\'t create child trace logger from global logger.');
 		}
 		let { minLevel, trace, ...restOptions } = options || {};
 		restOptions.minLevel                    = levels[minLevel] ? minLevel : this._minLevel;
-		let { current, ...restTrace }            = this._trace;
-		restTrace.parent                         = current;
-		restOptions.trace                        = Object.assign({}, restTrace, trace);
-		let newOptions                           = Object.assign({}, this._options, restOptions);
+		let { current, ...restTrace }           = this._trace;
+		restTrace.parent                        = current;
+		restOptions.trace                       = Object.assign({}, restTrace, trace);
+		let newOptions                          = Object.assign({}, this._options, restOptions);
 		return new HoodLogger(name, newOptions);
 	}
 
@@ -194,7 +192,7 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	verbose(msg, options) {
-		writeLog(this, msg, options, levels.verbose, this._logStream);
+		writeLogWithLevel(this, msg, options, levels.verbose, this._logStream);
 	}
 
 	/**
@@ -207,7 +205,7 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	debug(msg, options) {
-		writeLog(this, msg, options, levels.debug, this._logStream);
+		writeLogWithLevel(this, msg, options, levels.debug, this._logStream);
 	}
 
 	/**
@@ -222,7 +220,7 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	info(msg, options) {
-		writeLog(this, msg, options, levels.info, this._logStream);
+		writeLogWithLevel(this, msg, options, levels.info, this._logStream);
 	}
 
 	/**
@@ -235,7 +233,7 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	warn(msg, options) {
-		writeLog(this, msg, options, levels.warn, this._logStream);
+		writeLogWithLevel(this, msg, options, levels.warn, this._logStream);
 	}
 
 	/**
@@ -248,7 +246,7 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	error(msg, options) {
-		writeLog(this, msg, options, levels.error, this._errStream);
+		writeLogWithLevel(this, msg, options, levels.error, this._errStream);
 	}
 
 	/**
@@ -261,15 +259,39 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	fatal(msg, options) {
-		writeLog(this, msg, options, levels.fatal, this._errStream);
+		writeLogWithLevel(this, msg, options, levels.fatal, this._errStream);
+	}
+
+	/**
+	 * moreinfo - Log message in 'complete' log level to console.
+	 *
+	 * @param {string} msg - The log message to print to the console.
+	 * @param {object} [options={}] - Optional log params.
+	 * @param {object} [options.trace=null] - trace data(current and parent). Use this option to override trace from logger.
+	 * @param {object} [options.tags=null] - tags options.
+	 * @return {undefined}.
+	 */
+	end(msg, options) {
+		let opt = Object.assign({}, options, { status: 'end' });
+		writeLog(this, msg, opt, levels.info, this._logStream);
+	}
+
+	/**
+	 * moreinfo - Log message in 'end' log level to console.
+	 *
+	 * @param {string} msg - The log message to print to the console.
+	 * @param {object} [options={}] - Optional log params.
+	 * @param {object} [options.trace=null] - trace data(current and parent). Use this option to override trace from logger.
+	 * @param {object} [options.tags=null] - tags options.
+	 * @return {undefined}.
+	 */
+	complete(msg, options) {
+		let opt = Object.assign({}, options, { status: 'complete' });
+		writeLog(this, msg, opt, levels.info, this._logStream);
 	}
 }
 
 const writeLog = (logger, msg, options, level, stream) => {
-	if (level < levels[logger._minLevel]) {
-		return;
-	}
-
 	const { trace, tags, ...restOptions } = options || {};
 
 	let log = {
@@ -285,12 +307,20 @@ const writeLog = (logger, msg, options, level, stream) => {
 	stream(JSON.stringify(log));
 };
 
+const writeLogWithLevel = (logger, msg, options, level, stream) => {
+	if (level < levels[logger._minLevel]) {
+		return;
+	}
+
+	writeLog(logger, msg, options, level, stream);
+};
+
 const buildTraceObject = (logger, trace, tags) => {
 	if (logger._options && logger._options.disableTraceLogging) {
 		return null;
 	}
 
-	let t      = Object.assign({}, logger._trace, trace);
+	let t     = Object.assign({}, logger._trace, trace);
 	let tTags = tags || t.tags;
 
 	if (!Object.keys(t).length && !tTags) {
