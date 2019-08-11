@@ -1,10 +1,9 @@
 {
   "name": "@hood/hoodjs-logger",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Hood trace logger library",
   "main": "src/index.js",
   "dependencies": {
-    "request": "2.88.0",
     "bignum": "0.13.0"
   },
   "devDependencies": {
