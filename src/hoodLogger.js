@@ -275,7 +275,7 @@ class HoodLogger {
 		options              = options || {};
 		options.trace        = options.trace || {};
 		options.trace.status = 'end';
-		writeLog(this, msg, opt, levels.info, this._logStream);
+		writeLog(this, msg, options, levels.info, this._logStream);
 	}
 
 	/**
@@ -291,7 +291,7 @@ class HoodLogger {
 		options              = options || {};
 		options.trace        = options.trace || {};
 		options.trace.status = 'complete';
-		writeLog(this, msg, opt, levels.info, this._logStream);
+		writeLog(this, msg, options, levels.info, this._logStream);
 	}
 }
 
