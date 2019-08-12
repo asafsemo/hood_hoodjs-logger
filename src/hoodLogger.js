@@ -272,7 +272,9 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	end(msg, options) {
-		let opt = Object.assign({}, options, { status: 'end' });
+		options              = options || {};
+		options.trace        = options.trace || {};
+		options.trace.status = 'end';
 		writeLog(this, msg, opt, levels.info, this._logStream);
 	}
 
@@ -286,7 +288,9 @@ class HoodLogger {
 	 * @return {undefined}.
 	 */
 	complete(msg, options) {
-		let opt = Object.assign({}, options, { status: 'complete' });
+		options              = options || {};
+		options.trace        = options.trace || {};
+		options.trace.status = 'complete';
 		writeLog(this, msg, opt, levels.info, this._logStream);
 	}
 }
