@@ -55,10 +55,9 @@ class HoodLogger {
 		this._errStream = restOptions.errStream || console.error;
 
 		if (trace) {
-			this._trace = {
-				id     : trace.id || bignum.rand(RESERVED_INT64).toNumber(),
-				current: trace.current || bignum.rand(RESERVED_INT64).toNumber(),
-			};
+			trace.id = trace.id || bignum.rand(RESERVED_INT64).toNumber();
+			trace.current = trace.current || bignum.rand(RESERVED_INT64).toNumber();
+			this._trace = Object.assign({}, trace);
 			// this._trace.tags    = trace.tags;
 		}
 	}
