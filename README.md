@@ -29,18 +29,6 @@ npm install --save @hood/hoodjs-logger
 # Usage
 The recommended way to use hood logger, we recommend the minimum usage of log lines that are not related to traces.
 
-# Integration to external systems
-At the current time Hood agent is sending data to hood servers, and Jaeger (https://www.jaegertracing.io/)
-
-Screenshot from Hood service:
-
-![Hood Web UI](https://github.com/asafsemo/hood_hoodjs-logger/blob/init/docs/hood_screenshot.png)
-
-Future integrations:
-Loggly (https://www.loggly.com/), Sentry (https://sentry.io/welcome/), Logz.io (https://logz.io/) 
-
-
-
 ## Table of content
 * [Motivation](#motivation)
 * [Quick start](#quick-start)
@@ -64,6 +52,34 @@ Loggly (https://www.loggly.com/), Sentry (https://sentry.io/welcome/), Logz.io (
     * [Handling uncaught exception]()
 * [Tests]()
 
+# Integration to external systems
+At the current time Hood agent is sending data to hood servers, and Jaeger (https://www.jaegertracing.io/)
+
+Screenshot from Hood service:
+
+![Hood Web UI](https://github.com/asafsemo/hood_hoodjs-logger/blob/init/docs/hood_screenshot.png)
+
+Future integrations:
+Loggly (https://www.loggly.com/), Sentry (https://sentry.io/welcome/), Logz.io (https://logz.io/) 
+
+# Logging
+## Log levels
+## Logger functions
+
+# Trace Logger
+## Create root trace logger
+## Create child trace logger
+
+# Logger create params
+# Logger format
+# Using bunyan CLI on developer computer
+# Examples
+# Code snippets
+# Installing Hood agent on Kubernetes and receiving APM
+# Exceptions
+## Handling uncaught exception
+
+# Tests
 
 
 ``` js
