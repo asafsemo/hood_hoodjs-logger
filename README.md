@@ -31,7 +31,9 @@ The recommended way to use hood logger, we recommend the minimum usage of log li
 
 # Integration to external systems
 At the current time Hood agent is sending data to hood servers, and Jaeger (https://www.jaegertracing.io/)
+
 Screenshot from Hood service:
+
 ![Hood Web UI](https://github.com/asafsemo/hood_hoodjs-logger/blob/init/docs/hood_screenshot.png)
 
 Future integrations:
