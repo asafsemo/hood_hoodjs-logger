@@ -2,6 +2,8 @@
 
 # Hood Logger
 
+![Jaeger trace example](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+
 ## Motivation
 My biggest motivation behind creating Hood project is to provide APM for each project without the need to integrate special libraries into the code.
 Each developer from the first line he writes in any project includes writing logs, I find there is a lot of data in those logs and with the usage of hood logger and agent in the Kubernetes environment we can provide you a lot of data.
@@ -30,6 +32,7 @@ The recommended way to use hood logger, we recommend the minimum usage of log li
 # Integration to external systems
 At the current time Hood agent is sending data to hood servers, and Jaeger (https://www.jaegertracing.io/)
 Screenshot from Hood service:
+![Hood Web UI](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
 
 Future integrations:
 Loggly (https://www.loggly.com/), Sentry (https://sentry.io/welcome/), Logz.io (https://logz.io/) 
