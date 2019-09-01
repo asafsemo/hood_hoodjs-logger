@@ -2,7 +2,7 @@
 
 # Hood Logger
 
-![Jaeger trace example](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+![Jaeger trace example](https://github.com/asafsemo/hood_hoodjs-logger/blob/init/docs/jaeger_screenshot.png)
 
 ## Motivation
 My biggest motivation behind creating Hood project is to provide APM for each project without the need to integrate special libraries into the code.
@@ -32,7 +32,7 @@ The recommended way to use hood logger, we recommend the minimum usage of log li
 # Integration to external systems
 At the current time Hood agent is sending data to hood servers, and Jaeger (https://www.jaegertracing.io/)
 Screenshot from Hood service:
-![Hood Web UI](https://raw.githubusercontent.com/username/projectname/branch/path/to/img.png)
+![Hood Web UI](https://github.com/asafsemo/hood_hoodjs-logger/blob/init/docs/hood_screenshot.png)
 
 Future integrations:
 Loggly (https://www.loggly.com/), Sentry (https://sentry.io/welcome/), Logz.io (https://logz.io/) 
