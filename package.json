@@ -1,14 +1,14 @@
 {
   "name": "@hood/hoodjs-logger",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Hood trace logger library",
   "main": "src/index.js",
   "dependencies": {
-    "bignum": "0.13.0"
+    "bignum": "^0.13.1"
   },
   "devDependencies": {
-    "tape": "4.11.0",
-    "tap-summary": "4.0.0"
+    "tape": "^4.13.2",
+    "tap-summary": "^4.0.0"
   },
   "scripts": {
     "reset": "rm -rf ./node_modules",
