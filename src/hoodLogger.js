@@ -1,24 +1,21 @@
-const bignum = require('bignum');
-const os     = require('os');
+const os = require('os');
 
 const { ErrorHoodLogger } = require('./errorHoodLogger');
 
 const levels = {
-	verbose: 10,
-	debug  : 20,
-	info   : 30,
-	warn   : 40,
-	error  : 50,
-	fatal  : 60,
-	10     : 'verbose',
-	20     : 'debug',
-	30     : 'info',
-	40     : 'warn',
-	50     : 'error',
-	60     : 'fatal',
+    verbose: 10,
+    debug: 20,
+    info: 30,
+    warn: 40,
+    error: 50,
+    fatal: 60,
+    10: 'verbose',
+    20: 'debug',
+    30: 'info',
+    40: 'warn',
+    50: 'error',
+    60: 'fatal',
 };
-
-const RESERVED_INT64 = 9223372036854775807;
 
 // disconnect the logger
 /** Class representing a HoodLogger. */
@@ -38,29 +35,29 @@ class HoodLogger {
 	 * @param {number} [options.trace.current] - Current trace id.
 	 * TODO: add tags - last
 	 */
-	constructor(name, options) {
-		if (!name) {
-			throw new ErrorHoodLogger('Missing mandatory parameter: name');
-		}
-		const { minLevel, trace, ...restOptions } = options || {};
+    constructor(name, options) {
+        if (!name) {
+            throw new ErrorHoodLogger('Missing mandatory parameter: name');
+        }
+        const { minLevel, trace, ...restOptions } = options || {};
 
-		this._name       = name;
-		this._minLevel   = minLevel || 'info';
-		this._options    = restOptions;
-		this._defaultLog = {
-			name: this._name, pid: process.pid, hostname: os.hostname(), v: (restOptions.version || 0).toString(),
-		};
+        this._name = name;
+        this._minLevel = minLevel || 'info';
+        this._options = restOptions;
+        this._defaultLog = {
+            name: this._name, pid: process.pid, hostname: os.hostname(), v: (restOptions.version || 0).toString(),
+        };
 
-		this._logStream = restOptions.logStream || console.log;
-		this._errStream = restOptions.errStream || console.error;
+        this._logStream = restOptions.logStream || console.log;
+        this._errStream = restOptions.errStream || console.error;
 
-		if (trace) {
-			trace.id = trace.id || bignum.rand(RESERVED_INT64).toNumber();
-			trace.current = trace.current || bignum.rand(RESERVED_INT64).toNumber();
-			this._trace = Object.assign({}, trace);
-			// this._trace.tags    = trace.tags;
-		}
-	}
+        if (trace) {
+            trace.id = trace.id || getRandomStringId('yxxxxxxxxxxxxxxxxxx');
+            trace.current = trace.current || getRandomStringId('yxxxxxxxxxxxxxxxxxx');
+            this._trace = Object.assign({}, trace);
+            // this._trace.tags    = trace.tags;
+        }
+    }
 
 	/**
 	 * Set up listener on UncaughtException.
@@ -68,41 +65,41 @@ class HoodLogger {
 	 * @param {boolean} [isExitUncaughtException] Optical param, if to exit after UncaughtException was thrown.
 	 * @return {undefined}
 	 */
-	// todo: test if this is working correct
-	listenUncaughtException(isExitUncaughtException) {
-		process.on('uncaughtException', (err) => {
-			// log the error
-			// this.error(err);
-			if (!isExitUncaughtException) {
-				return;
-			}
-			setTimeout(() => {
-				process.exit(10);
-			}, 5000);
-		});
-	}
+    // todo: test if this is working correct
+    listenUncaughtException(isExitUncaughtException) {
+        process.on('uncaughtException', (err) => {
+            // log the error
+            // this.error(err);
+            if (!isExitUncaughtException) {
+                return;
+            }
+            setTimeout(() => {
+                process.exit(10);
+            }, 5000);
+        });
+    }
 
 	/**
 	 * Use this function
 	 *
 	 * @return {number|null} Retrieves root trace id
 	 */
-	get rootTraceId() {
-		if (!this._trace) {
-			return null;
-		}
-		return this._trace.id;
-	}
+    get rootTraceId() {
+        if (!this._trace) {
+            return null;
+        }
+        return this._trace.id;
+    }
 
 	/**
 	 * @return {number|null} Retrieves current trace id
 	 */
-	get currentTraceId() {
-		if (!this._trace) {
-			return null;
-		}
-		return this._trace.current;
-	}
+    get currentTraceId() {
+        if (!this._trace) {
+            return null;
+        }
+        return this._trace.current;
+    }
 
 	/**
 	 * Creates a Root logger instance. This is a helper function which can generate traces.
@@ -116,13 +113,13 @@ class HoodLogger {
 	 * TODO: add tags
 	 * @return {HoodLogger} new instance of Root trace logger.
 	 */
-	createRootTraceLogger(name, options) {
-		let { minLevel, ...restOptions } = options || {};
-		restOptions.minLevel             = levels[minLevel] ? minLevel : this._minLevel;
-		let newOptions                   = Object.assign({}, this._options, restOptions);
-		newOptions.trace                 = newOptions.trace || {};
-		return new HoodLogger(name, newOptions);
-	}
+    createRootTraceLogger(name, options) {
+        let { minLevel, ...restOptions } = options || {};
+        restOptions.minLevel = levels[minLevel] ? minLevel : this._minLevel;
+        let newOptions = Object.assign({}, this._options, restOptions);
+        newOptions.trace = newOptions.trace || {};
+        return new HoodLogger(name, newOptions);
+    }
 
 	/**
 	 * Creates a Child logger instance. Child logger can be created only out of Root logger instance.
@@ -145,18 +142,18 @@ class HoodLogger {
 	 * TODO: add tags
 	 * @return {HoodLogger} new instance of Child trace logger.
 	 */
-	createChildTraceLogger(name, options) {
-		if (!this._trace) {
-			throw new ErrorHoodLogger('Can\'t create child trace logger from global logger.');
-		}
-		let { minLevel, trace, ...restOptions } = options || {};
-		restOptions.minLevel                    = levels[minLevel] ? minLevel : this._minLevel;
-		let { current, ...restTrace }           = this._trace;
-		restTrace.parent                        = current;
-		restOptions.trace                       = Object.assign({}, restTrace, trace);
-		let newOptions                          = Object.assign({}, this._options, restOptions);
-		return new HoodLogger(name, newOptions);
-	}
+    createChildTraceLogger(name, options) {
+        if (!this._trace) {
+            throw new ErrorHoodLogger('Can\'t create child trace logger from global logger.');
+        }
+        let { minLevel, trace, ...restOptions } = options || {};
+        restOptions.minLevel = levels[minLevel] ? minLevel : this._minLevel;
+        let { current, ...restTrace } = this._trace;
+        restTrace.parent = current;
+        restOptions.trace = Object.assign({}, restTrace, trace);
+        let newOptions = Object.assign({}, this._options, restOptions);
+        return new HoodLogger(name, newOptions);
+    }
 
 	/**
 	 * @typedef {object} TraceContext
@@ -175,11 +172,11 @@ class HoodLogger {
 	 *
 	 * @return {TraceContext} .
 	 */
-	getTraceContext() {
-		return Object.assign({}, {
-			'x-cloud-trace-context': this._trace.id, 'x-trace-parent-id': this._trace.current,
-		}, this._options.headers);
-	}
+    getTraceContext() {
+        return Object.assign({}, {
+            'x-cloud-trace-context': this._trace.id, 'x-trace-parent-id': this._trace.current,
+        }, this._options.headers);
+    }
 
 	/**
 	 * Log message in 'verbose' log level to console.
@@ -190,9 +187,9 @@ class HoodLogger {
 	 * @param {object} [options.tags=null] - tags options.
 	 * @return {undefined}.
 	 */
-	verbose(msg, options) {
-		writeLogWithLevel(this, msg, options, levels.verbose, this._logStream);
-	}
+    verbose(msg, options) {
+        writeLogWithLevel(this, msg, options, levels.verbose, this._logStream);
+    }
 
 	/**
 	 * Log message in 'debug' log level to console.
@@ -203,9 +200,9 @@ class HoodLogger {
 	 * @param {object} [options.tags=null] - tags options.
 	 * @return {undefined}.
 	 */
-	debug(msg, options) {
-		writeLogWithLevel(this, msg, options, levels.debug, this._logStream);
-	}
+    debug(msg, options) {
+        writeLogWithLevel(this, msg, options, levels.debug, this._logStream);
+    }
 
 	/**
 	 * Log message in 'info' log level to console.
@@ -218,9 +215,9 @@ class HoodLogger {
 	 *                                    Currently used to terminate logging of the tracer.
 	 * @return {undefined}.
 	 */
-	info(msg, options) {
-		writeLogWithLevel(this, msg, options, levels.info, this._logStream);
-	}
+    info(msg, options) {
+        writeLogWithLevel(this, msg, options, levels.info, this._logStream);
+    }
 
 	/**
 	 * Log message in 'warn' log level to console.
@@ -231,9 +228,9 @@ class HoodLogger {
 	 * @param {object} [options.tags=null] - tags options.
 	 * @return {undefined}.
 	 */
-	warn(msg, options) {
-		writeLogWithLevel(this, msg, options, levels.warn, this._logStream);
-	}
+    warn(msg, options) {
+        writeLogWithLevel(this, msg, options, levels.warn, this._logStream);
+    }
 
 	/**
 	 * Log message in 'error' log level to console.
@@ -244,9 +241,9 @@ class HoodLogger {
 	 * @param {object} [options.tags=null] - tags options.
 	 * @return {undefined}.
 	 */
-	error(msg, options) {
-		writeLogWithLevel(this, msg, options, levels.error, this._errStream);
-	}
+    error(msg, options) {
+        writeLogWithLevel(this, msg, options, levels.error, this._errStream);
+    }
 
 	/**
 	 * Log message in 'fatal' log level to console.
@@ -257,9 +254,9 @@ class HoodLogger {
 	 * @param {object} [options.tags=null] - tags options.
 	 * @return {undefined}.
 	 */
-	fatal(msg, options) {
-		writeLogWithLevel(this, msg, options, levels.fatal, this._errStream);
-	}
+    fatal(msg, options) {
+        writeLogWithLevel(this, msg, options, levels.fatal, this._errStream);
+    }
 
 	/**
 	 * moreinfo - Log message in 'complete' log level to console.
@@ -270,12 +267,12 @@ class HoodLogger {
 	 * @param {object} [options.tags=null] - tags options.
 	 * @return {undefined}.
 	 */
-	end(msg, options) {
-		options              = options || {};
-		options.trace        = options.trace || {};
-		options.trace.status = 'end';
-		writeLog(this, msg, options, levels.info, this._logStream);
-	}
+    end(msg, options) {
+        options = options || {};
+        options.trace = options.trace || {};
+        options.trace.status = 'end';
+        writeLog(this, msg, options, levels.info, this._logStream);
+    }
 
 	/**
 	 * moreinfo - Log message in 'end' log level to console.
@@ -286,58 +283,71 @@ class HoodLogger {
 	 * @param {object} [options.tags=null] - tags options.
 	 * @return {undefined}.
 	 */
-	complete(msg, options) {
-		options              = options || {};
-		options.trace        = options.trace || {};
-		options.trace.status = 'complete';
-		writeLog(this, msg, options, levels.info, this._logStream);
-	}
+    complete(msg, options) {
+        options = options || {};
+        options.trace = options.trace || {};
+        options.trace.status = 'complete';
+        writeLog(this, msg, options, levels.info, this._logStream);
+    }
+}
+
+const getRandomStringId = (strFormat) => {
+    const timestamp = Date.now().toString();
+    let index = timestamp.length;
+    return strFormat.replace(/[xyd]/g, (c) => {
+        if (c == 'd' && index > 0) {
+            const retVal = timestamp[timestamp.length - index];
+            index--
+            return retVal;
+        }
+        return Math.floor(Math.random() * (c == 'x' ? 10 : 9));
+    });
 }
 
 const writeLog = (logger, msg, options, level, stream) => {
-	const { trace, tags, ...restOptions } = options || {};
+    const { trace, tags, ...restOptions } = options || {};
 
-	let log = {
-		time: new Date(), level: level, msg: msg,
-	};
-	log     = Object.assign({}, logger._defaultLog, log, restOptions);
+    let log = {
+        time: new Date(), level: level, msg: msg,
+    };
+    log = Object.assign({}, logger._defaultLog, log, restOptions);
 
-	let traceObject = buildTraceObject(logger, trace, tags);
-	if (traceObject) {
-		log.trace = traceObject;
-	}
+    let traceObject = buildTraceObject(logger, trace, tags);
+    if (traceObject) {
+        log.trace = traceObject;
+    }
 
-	stream(JSON.stringify(log));
+    stream(JSON.stringify(log));
 };
 
 const writeLogWithLevel = (logger, msg, options, level, stream) => {
-	if (level < levels[logger._minLevel]) {
-		return;
-	}
+    if (level < levels[logger._minLevel]) {
+        return;
+    }
 
-	writeLog(logger, msg, options, level, stream);
+    writeLog(logger, msg, options, level, stream);
 };
 
 const buildTraceObject = (logger, trace, tags) => {
-	if (logger._options && logger._options.disableTraceLogging) {
-		return null;
-	}
+    if (logger._options && logger._options.disableTraceLogging) {
+        return null;
+    }
 
-	let t     = Object.assign({}, logger._trace, trace);
-	let tTags = tags || t.tags;
+    let t = Object.assign({}, logger._trace, trace);
+    let tTags = tags || t.tags;
 
-	if (!Object.keys(t).length && !tTags) {
-		return null;
-	}
+    if (!Object.keys(t).length && !tTags) {
+        return null;
+    }
 
-	if (!logger._trace || !logger._trace.id) {
-		return null;
-	}
+    if (!logger._trace || !logger._trace.id) {
+        return null;
+    }
 
-	if (tTags) {
-		t.tags = tTags;
-	}
-	return t;
+    if (tTags) {
+        t.tags = tTags;
+    }
+    return t;
 };
 
 module.exports = { HoodLogger };

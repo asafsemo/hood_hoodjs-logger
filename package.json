@@ -1,31 +1,29 @@
 {
-  "name": "@hood/hoodjs-logger",
-  "version": "2.0.3",
-  "description": "Hood trace logger library",
-  "main": "src/index.js",
-  "dependencies": {
-    "bignum": "^0.13.1"
-  },
-  "devDependencies": {
-    "tape": "^4.13.2",
-    "tap-summary": "^4.0.0"
-  },
-  "scripts": {
-    "reset": "rm -rf ./node_modules",
-    "test": "npm i && node node_modules/tape/bin/tape ./test/**/*.spec.js",
-    "summary": "npm i && node $NODE_DEBUG_OPTION node_modules/tape/bin/tape ./test/**/*.spec.js | tap-summary"
-  },
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/asafsemo/hood_hoodjs-logger.git"
-  },
-  "author": "Asaf Semo",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/asafsemo/hood_hoodjs-logger/issues"
-  },
-  "homepage": "https://github.com/asafsemo/hood_hoodjs-logger#readme"
+    "name": "@hood/hoodjs-logger",
+    "version": "2.0.4",
+    "description": "Hood trace logger library",
+    "main": "src/index.js",
+    "dependencies": {},
+    "devDependencies": {
+        "tape": "^4.13.2",
+        "tap-summary": "^4.0.0"
+    },
+    "scripts": {
+        "reset": "rimraf ./node_modules",
+        "test": "npm i && node node_modules/tape/bin/tape ./test/**/*.spec.js",
+        "summary": "npm i && node $NODE_DEBUG_OPTION node_modules/tape/bin/tape ./test/**/*.spec.js | tap-summary"
+    },
+    "directories": {
+        "test": "test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/asafsemo/hood_hoodjs-logger.git"
+    },
+    "author": "Asaf Semo",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/asafsemo/hood_hoodjs-logger/issues"
+    },
+    "homepage": "https://github.com/asafsemo/hood_hoodjs-logger#readme"
 }
