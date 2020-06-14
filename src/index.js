@@ -1,7 +1,9 @@
-const { HoodLogger }      = require('./hoodLogger');
-const { ErrorHoodLogger } = require('./errorHoodLogger');
+const { ErrorHoodLogger } = require('./libs/errorHoodLogger');
+const { HoodLogger } = require('./loggers/hoodLogger');
+const { RemoteLogger } = require('./loggers/remoteLogger');
 
 module.exports = {
-	HoodLogger,
 	ErrorHoodLogger,
+	HoodLogger,
+	RemoteLogger,
 };

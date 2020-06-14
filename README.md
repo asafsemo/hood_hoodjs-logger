@@ -64,18 +64,49 @@ Loggly (https://www.loggly.com/), Sentry (https://sentry.io/welcome/), Logz.io (
 
 # Logging
 ## Log levels
+	verbose: 10,
+	debug  : 20,
+	info   : 30,
+	warn   : 40,
+	error  : 50,
+	fatal  : 60,
+	
 ## Logger functions
+constructor - new HoodLogger
+listenUncaughtException - 
+rootTraceId - 
+currentTraceId - 
+createRootTraceLogger - 
+createChildTraceLogger - 
+getTraceContext - 
+verbose - 
+debug - 
+info - 
+warn - 
+error - 
+fatal - 
+end - 
+complete - 
 
 # Trace Logger
 ## Create root trace logger
+createRootTraceLogger - 
+
 ## Create child trace logger
+createChildTraceLogger - 
 
 # Logger create params
 # Logger format
+the logger is printing out log in a JSON format
 # Using bunyan CLI on developer computer
+Sending JSON objects between services is good, while developing the human eye 
+understand text better, in order to transform the JSON object to a text line you should use
+Bunyan CLI as pipe
+
 # Examples
 # Code snippets
 # Installing Hood agent on Kubernetes and receiving APM
+Please contact us by sending an email to asafsemo@gmail.com in order to get more information how to install Hood agent.
 # Exceptions
 ## Handling uncaught exception
 

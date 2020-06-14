@@ -1,29 +1,34 @@
 {
-    "name": "@hood/hoodjs-logger",
-    "version": "2.0.4",
-    "description": "Hood trace logger library",
-    "main": "src/index.js",
-    "dependencies": {},
-    "devDependencies": {
-        "tape": "^4.13.2",
-        "tap-summary": "^4.0.0"
-    },
-    "scripts": {
-        "reset": "rimraf ./node_modules",
-        "test": "npm i && node node_modules/tape/bin/tape ./test/**/*.spec.js",
-        "summary": "npm i && node $NODE_DEBUG_OPTION node_modules/tape/bin/tape ./test/**/*.spec.js | tap-summary"
-    },
-    "directories": {
-        "test": "test"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/asafsemo/hood_hoodjs-logger.git"
-    },
-    "author": "Asaf Semo",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/asafsemo/hood_hoodjs-logger/issues"
-    },
-    "homepage": "https://github.com/asafsemo/hood_hoodjs-logger#readme"
+	"name": "@hood/hoodjs-logger",
+	"version": "2.0.4",
+	"description": "Hood trace logger library",
+	"main": "src/index.js",
+	"dependencies": {},
+	"devDependencies": {
+		"tape": "^5.0.1",
+		"tap-summary": "^4.0.0",
+		"eslint": "^7.2.0",
+		"eslint-config-airbnb-base": "^14.2.0",
+		"eslint-plugin-import": "^2.21.2",
+		"eslint-config-prettier": "^6.11.0"
+	},
+	"scripts": {
+		"reset": "rimraf ./node_modules",
+		"lint": "eslint .",
+		"test": "npm i && node node_modules/tape/bin/tape ./test/**/*.spec.js",
+		"summary": "npm i && node $NODE_DEBUG_OPTION node_modules/tape/bin/tape ./test/**/*.spec.js | tap-summary"
+	},
+	"directories": {
+		"test": "test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/asafsemo/hood_hoodjs-logger.git"
+	},
+	"author": "Asaf Semo",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/asafsemo/hood_hoodjs-logger/issues"
+	},
+	"homepage": "https://github.com/asafsemo/hood_hoodjs-logger#readme"
 }
