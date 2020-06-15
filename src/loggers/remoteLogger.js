@@ -1,18 +1,25 @@
 const { BaseLogger } = require('../libs/baseLogger');
 
 class RemoteLogger extends BaseLogger {
-	constructor(name, options) {
+	constructor(name, httpClientWrapper, httpClientConfig, options) {
 		super(name, options);
-		consts.logs = [];
+		this._logs = [];
+		this._httpClientWrapper = httpClientWrapper;
+		this._httpClientConfig = httpClientConfig;
+	}
+
+	createChildClassLogger(name, options) {
+		return new RemoteLogger(name, options);
 	}
 
 	writeLog(msg, options, level) {
 		const log = this.createDefaultLogObject(msg, options, level);
-		this.logs.push(log);
+		this._logs.push(log);
 	}
 
-	flush() {
-		console.log('1111111');
+	async flush() {
+		const { url, options } = this._httpClientConfig;
+		this._httpClientWrapper.post(url, this._logs, options);
 	}
 }
 

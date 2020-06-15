@@ -9,12 +9,16 @@ class HoodLogger extends BaseLogger {
 		this._errStream = this._options.errStream || console.error;
 	}
 
+	createChildClassLogger(name, options) {
+		return new HoodLogger(name, options);
+	}
+
 	writeLog(msg, options, level) {
 		const log = this.createDefaultLogObject(msg, options, level);
 
 		let stream = this._logStream;
 		const errorStreamLevels = ['error', 'warn', 'fatal'];
-		if (errorStreamLevels.contains(level)) {
+		if (errorStreamLevels.includes(level)) {
 			stream = this._errStream;
 		}
 

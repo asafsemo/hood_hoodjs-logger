@@ -137,7 +137,7 @@ class BaseLogger {
 		options = options || {};
 		options.trace = options.trace || {};
 		options.trace.status = 'end';
-		this.writeLog(this, msg, options, levels.info);
+		this.writeLog(msg, options, levels.info);
 	}
 
 	/**
@@ -153,7 +153,7 @@ class BaseLogger {
 		options = options || {};
 		options.trace = options.trace || {};
 		options.trace.status = 'complete';
-		this.writeLog(this, msg, options, levels.info);
+		this.writeLog(msg, options, levels.info);
 	}
 
 	/**
@@ -173,7 +173,7 @@ class BaseLogger {
 		restOptions.minLevel = levels[minLevel] ? minLevel : this._minLevel;
 		const newOptions = { ...this._options, ...restOptions };
 		newOptions.trace = newOptions.trace || {};
-		return new HoodLogger(name, newOptions);
+		return this.createChildClassLogger(name, newOptions);
 	}
 
 	/**
@@ -207,7 +207,11 @@ class BaseLogger {
 		restTrace.parent = current;
 		restOptions.trace = { ...restTrace, ...trace };
 		const newOptions = { ...this._options, ...restOptions };
-		return new HoodLogger(name, newOptions);
+		return this.createChildClassLogger(name, newOptions);
+	}
+
+	createChildClassLogger(name, options) {
+		throw new Error('Unimplemented subclass method: createChildClassLogger');
 	}
 
 	/**
@@ -286,11 +290,11 @@ class BaseLogger {
 	}
 
 	writeLog(msg, options, level) {
-		throw new ErrorHoodLogger('Should add code here in the child class');
+		throw new Error('Unimplemented subclass method: writeLog');
 	}
 
-	flush() {
-		throw new ErrorHoodLogger('Should add code here in the child class');
+	async flush() {
+		throw new Error('Unimplemented subclass method: flush');
 	}
 }
 
