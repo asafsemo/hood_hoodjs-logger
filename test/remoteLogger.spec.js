@@ -4,7 +4,7 @@ const { RemoteLogger, ErrorHoodLogger } = require('../src/index');
 
 test.onFinish(() => { process.exit(0); });
 
-let shouldSkip = false;
+let shouldSkip = true;
 
 test('Test general logger without name, should throw an exception.', { skip: shouldSkip }, assert => {
 	try {
