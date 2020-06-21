@@ -41,7 +41,7 @@ class RemoteLogger extends BaseLogger {
 			return;
 		}
 		this._flushCounter = 0;
-		const payload = JSON.stringify(this._logs);
+		const payload = [...this._logs];
 		this._currentPayloadSize = 0;
 		this._logs = [];
 
