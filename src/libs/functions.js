@@ -1,16 +1,16 @@
 const levels = {
 	verbose: 10,
-	debug  : 20,
-	info   : 30,
-	warn   : 40,
-	error  : 50,
-	fatal  : 60,
-	10     : 'verbose',
-	20     : 'debug',
-	30     : 'info',
-	40     : 'warn',
-	50     : 'error',
-	60     : 'fatal',
+	debug: 20,
+	info: 30,
+	warn: 40,
+	error: 50,
+	fatal: 60,
+	10: 'verbose',
+	20: 'debug',
+	30: 'info',
+	40: 'warn',
+	50: 'error',
+	60: 'fatal',
 };
 
 const writeLogWithLevel = (logger, msg, options, level) => {
@@ -33,6 +33,10 @@ const getRandomStringId = (strFormat) => {
 		return Math.floor(Math.random() * (c == 'x' ? 10 : 9));
 	});
 };
+
+const getRandomHexStringId = (strlen) => {
+	return '0x' + [...Array(strlen)].map(() => { return Math.floor(Math.random() * 16).toString(16)}).join('');
+}
 
 const buildTraceObject = (logger, trace, tags) => {
 	if (logger._options && logger._options.disableTraceLogging) {
@@ -60,5 +64,6 @@ module.exports = {
 	levels,
 	writeLogWithLevel,
 	getRandomStringId,
+	getRandomHexStringId,
 	buildTraceObject,
 };

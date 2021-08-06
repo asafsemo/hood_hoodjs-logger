@@ -2,6 +2,7 @@ const os = require('os');
 const { levels,
 	writeLogWithLevel,
 	getRandomStringId,
+	getRandomHexStringId,
 	buildTraceObject } = require('./functions');
 const { ErrorHoodLogger } = require('./errorHoodLogger');
 
@@ -37,8 +38,10 @@ class BaseLogger {
 		};
 
 		if (trace) {
-			trace.id = trace.id || getRandomStringId('yxxxxxxxxxxxxxxxxxx');
-			trace.current = trace.current || getRandomStringId('yxxxxxxxxxxxxxxxxxx');
+			// trace.id = trace.id || getRandomStringId('yxxxxxxxxxxxxxxxxxx');
+			// trace.current = trace.current || getRandomStringId('yxxxxxxxxxxxxxxxxxx');
+			trace.id = trace.id || getRandomHexStringId(32);
+			trace.current = trace.current || getRandomHexStringId(16);
 			this._trace = { ...trace };
 			// this._trace.tags    = trace.tags;
 		}
